@@ -24,6 +24,9 @@ This is a list of npm packages and their cruft
 if a package is found in this list when cruft is run,
 any listed content will be removed. 
 
+Entries starting with a bang will not be removed. e.g.
+override defaults.
+
 Updates to this readme will change these values.
 
 ## hawk
@@ -31,3 +34,6 @@ Updates to this readme will change these values.
 
 ## boom
   - images
+
+## ansi
+  - !examples

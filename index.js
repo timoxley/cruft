@@ -81,7 +81,7 @@ module.exports.load = function(file, fn) {
     if (err) return fn(err)
     var info = parse(fileContent)
     log('read cruft file', file)
-    info['cruft found'].__defaults = info.cruft['default cruft']
+    info['cruft found'].__defaults = info.cruft['default cruft'] || []
     fn(null, info['cruft found'])
   })
 }
@@ -91,6 +91,12 @@ function findCruft(packages, filter, fn) {
     var name = pkg.name
     var patterns = filter[name] || []
     patterns = patterns.concat(filter.__defaults)
+    patterns.forEach(function(pattern) {
+      if (pattern[0] === '!') {
+        patterns.splice(patterns.indexOf(pattern.slice(1)), 1)
+        patterns.splice(patterns.indexOf(pattern), 1)
+      }
+    })
     log('cruft to remove from %s', name, patterns.join(', '))
     getFilesIn(pkg.realPath).pipe(split()).pipe(through(function(file) {
       if (!file) return
@@ -127,7 +133,6 @@ function findPackages(dir, fn) {
     // max-depth during test suite invoked
     // with `npm test`. this is a workaround.
     exec(__dirname + '/node_modules/.bin/npm la --json --depth=10', {
-    //exec('node -e "console.log(process.cwd())"', {
       cwd: dir,
       maxBuffer: 1000 * 1024
     }, function(err, stdout) {
