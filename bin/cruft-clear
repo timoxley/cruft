@@ -8,7 +8,8 @@ var bytes = require('bytes')
 
 program
 .version(require('../package.json').version)
-.option('-f, --file [file]', 'markdown file containing cruft definitions', __dirname + '/../Readme.md')
+.option('-c, --cruft-file [file]', 'markdown file containing cruft definitions', __dirname + '/../Readme.md')
+.option('-d, --dry', 'do not delete, only list files that would be deleted')
 .option('-v, --verbose', 'verbose output')
 .parse(process.argv)
 
@@ -24,7 +25,16 @@ var Cruft = require('../index')
 var debug = require('debug')
 var info = debug('cruft')
 
-Cruft(program.args[0] || process.cwd(), program.file, function(err, stat) {
+if (program.dry) {
+  // handle dry runs
+  return Cruft.dry(program.args[0] || process.cwd(), program.cruftFile, function(err, files) {
+    if (err) return error(err)
+    console.info('The following would be deleted:')
+    console.info(files.join('\n'))
+  })
+}
+
+Cruft(program.args[0] || process.cwd(), program.cruftFile, function(err, stat) {
   if (err) error(err)
   info('before', bytes(stat.before))
   info('after', bytes(stat.after))

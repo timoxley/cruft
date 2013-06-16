@@ -1,11 +1,8 @@
-# cruft
+# purge
 
 Package cruft removal.
 
-This 
-
-
-## Default Cruft
+## Purge Defaults
 
 By default, the following content will be removed
 
@@ -18,11 +15,14 @@ By default, the following content will be removed
 
 Updates to this readme will change these defaults.
 
-# Cruft Found
+# Purge List
 
 This is a list of npm packages and their cruft
 if a package is found in this list when cruft is run,
 any listed content will be removed. 
+
+To override defaults, add a bang (!) in front of the value
+in the listing below.
 
 Updates to this readme will change these values.
 
@@ -31,3 +31,6 @@ Updates to this readme will change these values.
 
 ## boom
   - images
+
+## ansi
+  - !examples
