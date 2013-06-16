@@ -149,6 +149,7 @@ function getDependencies(root) {
     for(var name in pkg.dependencies) {
       next(pkg.dependencies[name])
     }
+    if (pkg === root) return
     results.push(pkg)
   }
   next(root)
