@@ -1,0 +1,52 @@
+#!/usr/bin/env node
+
+"use strict"
+
+var fs = require('fs-extra')
+var program = require('commander')
+var bytes = require('bytes')
+
+program
+.version(require('../package.json').version)
+.option('-f, --file [file]', 'markdown file containing cruft definitions', __dirname + '/../Readme.md')
+.option('-v, --verbose', 'verbose output')
+.parse(process.argv)
+
+if (!process.env.DEBUG) {
+  process.env.DEBUG = 'cruft'
+  if (program.verbose) process.env.DEBUG = 'cruft *'
+}
+
+// wait for debug arg handling before loading 
+// rest of app
+
+var Cruft = require('../index')
+var debug = require('debug')
+var info = debug('cruft')
+
+Cruft(program.args[0] || process.cwd(), program.file, function(err, stat) {
+  if (err) error(err)
+  info('before', bytes(stat.before))
+  info('after', bytes(stat.after))
+  info(bytes(stat.before - stat.after) + ' of cruft cleared!')
+  info(percentageDifference(stat.before, stat.after) + '% reduction!')
+})
+
+/**
+ * Helpers
+ */
+
+function percentageDifference(a, b) {
+  console.log(a, b)
+  if (a - b == 0) return 0
+  var percent = (a - b) / a * 100
+  return parseFloat(Math.round(percent * 100) / 100).toFixed(2);
+}
+
+function error(err) {
+  if (typeof err !== 'string') {
+    throw err
+  }
+  console.error.apply(console.error, arguments)
+  process.exit(1)
+}

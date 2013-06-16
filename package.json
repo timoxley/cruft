@@ -1,0 +1,29 @@
+{
+  "name": "decruft",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "(node ./test/removal.js)"
+  },
+  "repository": "",
+  "author": "",
+  "license": "BSD",
+  "dependencies": {
+    "mdconf": "0.0.2",
+    "commander": "~1.2.0",
+    "flist": "~1.0.1",
+    "minimatch": "~0.2.12",
+    "async": "~0.2.9",
+    "split": "~0.2.5",
+    "fs-extra": "~0.6.1",
+    "du": "0.0.1",
+    "debug": "~0.7.2",
+    "bytes": "~0.2.1",
+    "npm": "~1.2.30",
+    "concat-stream": "~1.0.0"
+  },
+  "devDependencies": {
+    "tape": "~1.0.4"
+  }
+}

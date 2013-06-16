@@ -1,0 +1,39 @@
+#!/usr/bin/env node
+var program = require('commander')
+var pkg = require('../package.json')
+var join = require('path').join
+var exists = require('fs').exists
+var spawn = require('child_process').spawn
+
+program
+  .version(pkg.version)
+  .usage('<command> [options]')
+  .parse(process.argv);
+
+
+// args void of cmd
+var args = process.argv.slice(3);
+
+// command
+var cmd = program.args[0];
+
+// display help
+if (!cmd) {
+  process.stdout.write(program.helpInformation());
+  program.emit('--help');
+  process.exit()
+}
+
+var bin = __dirname + '/cruft-' + cmd;
+
+// local
+var local = join(__dirname, bin);
+if (exists(local)) bin = local;
+
+// spawn
+var proc = spawn(bin, args, { stdio: 'inherit', customFds: [0, 1, 2] });
+
+proc.on('close', function(code){
+  process.exit(code);
+});
+
