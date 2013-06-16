@@ -15,7 +15,6 @@
   "dependencies": {
     "mdconf": "0.0.2",
     "commander": "~1.2.0",
-    "flist": "~1.0.1",
     "minimatch": "~0.2.12",
     "async": "~0.2.9",
     "split": "~0.2.5",
