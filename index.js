@@ -124,20 +124,29 @@ function findCruft(packages, filter, fn) {
 }
 
 function findPackages(dir, fn) {
-  // ensure package.json exists, lest it accidentally delete
-  // something.
+  //// ensure package.json exists, lest it accidentally delete
+  //// something by reading package.json in parent dir.
+  var pkgInfo = undefined
+  var err = undefined
   fs.exists(dir + '/package.json', function(exists) {
     if (!exists) return fn(new Error('package.json required in ' + dir))
     // NOTE RE --depth=10 
     // npm complains about
     // max-depth during test suite invoked
     // with `npm test`. this is a workaround.
-    exec(__dirname + '/node_modules/.bin/npm la --json --depth=10', {
+    var la = spawn(__dirname + '/node_modules/.bin/npm', 'la --json --depth=10'.split(' '), {
       cwd: dir,
-      maxBuffer: 1000 * 1024
-    }, function(err, stdout) {
-      if (err) return fn(err)
-      fn(null, getDependencies(JSON.parse(stdout)))
+      stdio: 'pipe'
+    })
+    la.stdout.pipe(concat(function(data) {
+      pkgInfo = JSON.parse(data)
+    }))
+    la.stderr.pipe(concat(function(data) {
+      err = data
+    }))
+    la.on('close', function(code) {
+      if (code !== 0) return fn(new Error(err))
+      fn(null, getDependencies(pkgInfo))
     })
   })
 }
