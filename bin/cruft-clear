@@ -1,13 +1,11 @@
 #!/usr/bin/env node
 
 "use strict"
-
-var fs = require('fs-extra')
 var program = require('commander')
 var bytes = require('bytes')
 
 program
-.version(require('../package.json').version)
+.version(require(__dirname + '/../package.json').version)
 .option('-f, --file [file]', 'markdown file containing cruft definitions', __dirname + '/../Readme.md')
 .option('-v, --verbose', 'verbose output')
 .parse(process.argv)
