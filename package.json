@@ -1,7 +1,7 @@
 {
   "name": "cruft",
   "version": "0.0.0",
-  "description": "",
+  "description": "Delete cruft from npm packages",
   "main": "index.js",
   "scripts": {
     "test": "set -e; for t in test/*.js; do node $t; done"
@@ -9,9 +9,12 @@
   "bin": {
     "cruft": "bin/cruft"
   },
-  "repository": "",
-  "author": "",
-  "license": "BSD",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/timoxley/cruft.git"
+  },
+  "author": "Tim Oxley",
+  "license": "MIT",
   "dependencies": {
     "mdconf": "0.0.2",
     "commander": "~1.2.0",
@@ -27,5 +30,22 @@
   },
   "devDependencies": {
     "tape": "~1.0.4"
+  },
+  "gitHead": "d1f729ad2d8aa92f9b13c7444803394ca46167e9",
+  "readmeFilename": "Readme.md",
+  "directories": {
+    "test": "test"
+  },
+  "keywords": [
+    "npm",
+    "purge",
+    "cruft",
+    "clean",
+    "packages",
+    "du",
+    "size"
+  ],
+  "bugs": {
+    "url": "https://github.com/timoxley/cruft/issues"
   }
 }
