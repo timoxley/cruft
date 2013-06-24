@@ -47,7 +47,7 @@ module.exports.clear = function(dir, filter, fn) {
       findCruft(installed, filter, function(err, files) {
         if (err) return fn(err)
         log('found %d pieces of cruft', files.length)
-        async.map(files, function(file, done) {
+        async.mapLimit(files, 128, function(file, done) {
           log('removing %s.', file)
           remove(file, function(err) {
             if (err) return done(err)
