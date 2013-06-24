@@ -10,6 +10,20 @@ or access to decent bandwidth (e.g. [Australia](http://www.netindex.com/download
 ## Usage
 
 ```
+> cruft clear --help
+  Usage: cruft-clear [options]
+
+  Options:
+
+    -h, --help         output usage information
+    -V, --version      output the version number
+    -f, --file [file]  markdown file containing cruft definitions
+    -v, --verbose      verbose output
+```
+
+## Example Usage
+
+```
 > npm install -g cruft
 > cd my-crufty-app
 > cruft clear
