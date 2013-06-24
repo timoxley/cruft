@@ -7,6 +7,18 @@ This tries to remove files from codebases that are not required in production (e
 Primary use case is deploying on [devices](http://ninjablocks.com) that may not have a lot of disk space
 or access to decent bandwidth (e.g. [Australia](http://www.netindex.com/download/2,18/Australia/)).
 
+## Usage
+
+```
+> npm install -g cruft
+> cd my-crufty-app
+> cruft clear
+  cruft before +0ms 82.11mb
+  cruft after +15ms 31.46mb
+  cruft 50.65mb of cruft cleared! +3ms
+  cruft 61.68% reduction! +10ms
+```
+
 ## Default Cruft
 
 By default, the following content will be removed. This is potentially dangerous.
