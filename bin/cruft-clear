@@ -35,7 +35,6 @@ Cruft(program.args[0] || process.cwd(), program.file, function(err, stat) {
  */
 
 function percentageDifference(a, b) {
-  console.log(a, b)
   if (a - b == 0) return 0
   var percent = (a - b) / a * 100
   return parseFloat(Math.round(percent * 100) / 100).toFixed(2);
