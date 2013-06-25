@@ -22,6 +22,8 @@ var info = debug('cruft')
 var log = debug('cruft debug')
 var merge = require('util')._extend
 
+var NPM_PATH = __dirname + '/node_modules/.bin/npm'
+
 module.exports = function(dir, cruftFile, fn) {
   // cruftFile is optional
   if (typeof cruftFile === 'function') {
@@ -134,19 +136,9 @@ function findPackages(dir, fn) {
     // npm complains about
     // max-depth during test suite invoked
     // with `npm test`. this is a workaround.
-    var la = spawn(__dirname + '/node_modules/.bin/npm', 'la --json --depth=10'.split(' '), {
-      cwd: dir,
-      stdio: 'pipe'
-    })
-    la.stdout.pipe(concat(function(data) {
-      pkgInfo = JSON.parse(data)
-    }))
-    la.stderr.pipe(concat(function(data) {
-      err = data
-    }))
-    la.on('close', function(code) {
-      if (code !== 0) return fn(new Error(err))
-      fn(null, getDependencies(pkgInfo))
+    execCmd(NPM_PATH + ' la --json --depth=10', dir, function(err, pkgInfo) {
+      if (err) return fn(err)
+      fn(null, getDependencies(JSON.parse(pkgInfo)))
     })
   })
 }
@@ -178,4 +170,32 @@ function getFilesIn(dir, fn) {
   var find = spawn('find', [dir])
   find.stdout.setEncoding('utf8')
   return find.stdout
+}
+
+function execCmd(cmd, dir, fn) {
+  var execCmd = cmd.split(' ')[0]
+  var args = cmd.split(' ').slice(1)
+  var output = undefined
+  var err = undefined
+
+  if (typeof dir === 'function') {
+    fn = dir
+    dir = process.cwd()
+  }
+  var child = spawn(execCmd, args, {
+    cwd: dir,
+    stdio: 'pipe'
+  })
+  child.stdout.setEncoding('utf8')
+  child.stderr.setEncoding('utf8')
+  child.stdout.pipe(concat(function(data) {
+    output = data
+  }))
+  child.stderr.pipe(concat(function(data) {
+    err = data
+  }))
+  child.on('close', function(code) {
+    if (code !== 0) return fn(new Error(err))
+    fn(null, output)
+  })
 }
