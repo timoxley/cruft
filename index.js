@@ -87,7 +87,7 @@ module.exports.load = function(file, fn) {
 }
 
 function findCruft(packages, filter, fn) {
-  async.map(packages, function(pkg, done) {
+  async.mapLimit(packages, 32, function(pkg, done) {
     var name = pkg.name
     var patterns = filter[name] || []
     patterns = patterns.concat(filter.__defaults)
