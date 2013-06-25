@@ -1,6 +1,6 @@
 {
   "name": "cruft",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Delete cruft from npm packages",
   "main": "index.js",
   "scripts": {

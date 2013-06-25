@@ -42,6 +42,8 @@ function percentageDifference(a, b) {
 
 function error(err) {
   if (typeof err !== 'string') {
+    console.error('Please make sure packages are installed and there are no extraneous packages')
+    console.error('try `npm purge` and ')
     throw err
   }
   console.error.apply(console.error, arguments)
