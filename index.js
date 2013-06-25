@@ -43,29 +43,35 @@ module.exports.clear = function(dir, filter, fn) {
     if (err) return fn(err)
     log('calculated size before', size)
     beforeSize = size
-    findPackages(dir, function(err, installed) {
+    prune(dir, function(err) {
       if (err) return fn(err)
-      log('found %d packages', installed.length)
-      findCruft(installed, filter, function(err, files) {
+      dedupe(dir, function(err) {
+      if (err) return fn(err)
+        findPackages(dir, function(err, installed) {
         if (err) return fn(err)
-        log('found %d pieces of cruft', files.length)
-        async.mapLimit(files, 128, function(file, done) {
-          log('removing %s.', file)
-          remove(file, function(err) {
-            if (err) return done(err)
-            done(null, file)
-          })
-        }, function(err, files) {
-          if (err) return fn(err)
-          du(dir, function(err, size) {
+          log('found %d packages', installed.length)
+          findCruft(installed, filter, function(err, files) {
             if (err) return fn(err)
-            log('calculated size after', size)
-            fn(null, {
-              before: beforeSize,
-              after: size,
-              files: files
+            log('found %d pieces of cruft', files.length)
+            async.mapLimit(files, 128, function(file, done) {
+              log('removing %s.', file)
+              remove(file, function(err) {
+                if (err) return done(err)
+                  done(null, file)
+              })
+            }, function(err, files) {
+              if (err) return fn(err)
+              du(dir, function(err, size) {
+                if (err) return fn(err)
+                  log('calculated size after', size)
+                fn(null, {
+                  before: beforeSize,
+                  after: size,
+                  files: files
+                })
+              }) 
             })
-          }) 
+          })
         })
       })
     })
@@ -122,6 +128,24 @@ function findCruft(packages, filter, fn) {
     return fn(null, files.reduce(function(a, b) {
       return a.concat(b)
     }, []))
+  })
+}
+
+function prune(dir, fn) {
+  execCmd(NPM_PATH + ' prune --depth=10', dir, function(err, stdout) {
+    info('pruned')
+    log(stdout)
+    if (err) return fn(err)
+    fn(null)
+  })
+}
+
+function dedupe(dir, fn) {
+  execCmd(NPM_PATH + ' dedupe --depth=10', dir, function(err, stdout) {
+    info('deduped')
+    log(stdout)
+    if (err) return fn(err)
+    fn(null)
   })
 }
 
