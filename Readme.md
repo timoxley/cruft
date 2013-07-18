@@ -2,7 +2,7 @@
 
 Package cruft removal.
 
-This tries to remove files from codebases that are not required in production (e.g. docs, tests, examples). 
+Cruft tries to remove files from codebases that are not required in production (e.g. docs, tests, examples). 
 
 Primary use case is deploying on [devices](http://ninjablocks.com) that may not have a lot of disk space
 or access to decent bandwidth (e.g. [Australia](http://www.netindex.com/download/2,18/Australia/)).
