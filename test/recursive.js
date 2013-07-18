@@ -16,7 +16,7 @@ test('it removes cruft', function(t) {
         t.assert(stats.files.length, 'lists files')
         t.assert(stats.files.some(function(file) {
           return file.indexOf('node_modules/hawk/node_modules/boom/images') !== -1
-        }), 'lists nested dependencies')
+        }), 'lists nested dependencies: searching for node_modules/hawk/node_modules/boom/images in:\n ' + stats.files.join('\n'))
       })
     })
   })
