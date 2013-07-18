@@ -12,8 +12,8 @@ test('it removes cruft', function(t) {
       if (err) return console.error('error', err)
       Cruft(__dirname + '/tmp', __dirname + '/../Readme.md', function(err, stats) {
         t.ifError(err, 'no error')
-        t.assert(stats.after < stats.before, 'reduces total size')
-        t.assert(stats.files.length, 'lists files')
+        t.assert(stats.after < stats.before, 'reduces total size. before: '+stats.before+' after: ' + stats.after)
+        t.assert(stats.files.length, 'lists files. length: ' + stats.files.length)
       })
     })
   })
