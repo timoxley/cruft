@@ -4,6 +4,7 @@
   "description": "Delete cruft from npm packages",
   "main": "index.js",
   "scripts": {
+    "pretest": "cd test/fixtures/simple && npm install",
     "test": "set -e; for t in test/*.js; do node $t; done"
   },
   "bin": {
