@@ -169,6 +169,7 @@ function getDependencies(root) {
   var results = []
   function next(pkg) {
     if (!pkg || !pkg.name) return
+    silly('getting deps for %s', pkg && pkg.name)
     for(var name in pkg.dependencies) {
       next(pkg.dependencies[name])
     }
