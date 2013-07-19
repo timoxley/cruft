@@ -78,7 +78,6 @@ module.exports.clear = function(dir, filter, fn) {
   })
 }
 
-
 module.exports.load = function(file, fn) {
   if (typeof file === 'function') {
     fn = file
@@ -134,16 +133,14 @@ function findCruft(packages, filter, fn) {
 function prune(dir, fn) {
   execCmd(NPM_PATH + ' prune --depth=10', dir, function(err, stdout) {
     info('pruned')
-    log(stdout)
     if (err) return fn(err)
     fn(null)
   })
 }
 
 function dedupe(dir, fn) {
-  execCmd(NPM_PATH + ' dedupe --depth=10', dir, function(err, stdout) {
+  execCmd(NPM_PATH + ' dedupe --depth=10', dir, function(err, stdout, stderr) {
     info('deduped')
-    log(stdout)
     if (err) return fn(err)
     fn(null)
   })
@@ -220,6 +217,7 @@ function execCmd(cmd, dir, fn) {
   }))
   child.on('close', function(code) {
     if (code !== 0) return fn(new Error(err))
-    fn(null, output)
+    log('executed: %s: \nstdout: %s\n stderr: %s\n', cmd, output, err)
+    fn(null, output, err)
   })
 }
