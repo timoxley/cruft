@@ -170,7 +170,6 @@ function getDependencies(root) {
   function next(pkg) {
     if (!pkg || !pkg.name) return
     silly('getting deps for %s', pkg && pkg.name)
-    silly(require('util').inspect(pkg))
     for (var name in pkg.dependencies) {
       next(pkg.dependencies[name])
     }
@@ -220,7 +219,7 @@ function execCmd(cmd, dir, fn) {
   }))
   child.on('close', function(code) {
     if (code !== 0) return fn(new Error(err))
-    silly('executed: %s: \nstdout: %s\n stderr: %s\n', cmd, output, err)
+    silly('executed: %s: \nstdout: %s\n stderr: %s\n', cmd, output.slice(0, 1000), err)
     fn(null, output, err)
   })
 }
