@@ -69,7 +69,7 @@ module.exports.clear = function(dir, filter, fn) {
                   after: size,
                   files: files
                 })
-              }) 
+              })
             })
           })
         })

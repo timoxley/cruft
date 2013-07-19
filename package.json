@@ -22,12 +22,12 @@
     "async": "~0.2.9",
     "split": "~0.2.5",
     "fs-extra": "~0.6.1",
-    "du": "git://github.com/timoxley/node-du.git",
     "debug": "~0.7.2",
     "bytes": "~0.2.1",
     "npm": "~1.2.30",
     "concat-stream": "~1.0.0",
-    "through": "~2.3.4"
+    "through": "~2.3.4",
+    "du": "0.0.2"
   },
   "devDependencies": {
     "tape": "~1.0.4"
