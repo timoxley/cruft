@@ -1,8 +1,7 @@
 {
   "name": "fixtures",
   "private": true,
-  "dependencies": {},
-  "devDependencies": {
+  "dependencies": {
     "hawk": "~0.15.0",
     "shoe": "0.0.11",
     "npm": "~1.2.30"
