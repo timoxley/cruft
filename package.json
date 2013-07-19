@@ -7,6 +7,7 @@
     "pretest": "cd test/fixtures/simple && npm install",
     "test": "set -e; for t in test/*.js; do node $t; done"
   },
+  "engines" : { "node" : ">=0.8.0" },
   "bin": {
     "cruft": "bin/cruft"
   },
