@@ -15,7 +15,7 @@ test('it removes cruft', function(t) {
         t.assert(stats.after < stats.before, 'reduces total size, before: '+stats.before+' after: ' + stats.after)
         t.assert(stats.files.length, 'lists files')
         t.assert(stats.files.some(function(file) {
-          return file.indexOf('node_modules/hawk/node_modules/boom/images') !== -1
+          return file.indexOf('boom/images') !== -1
         }), 'lists nested dependencies')
       })
     })
