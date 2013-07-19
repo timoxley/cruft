@@ -170,7 +170,8 @@ function getDependencies(root) {
   function next(pkg) {
     if (!pkg || !pkg.name) return
     silly('getting deps for %s', pkg && pkg.name)
-    for(var name in pkg.dependencies) {
+    silly(require('util').inspect(pkg))
+    for (var name in pkg.dependencies) {
       next(pkg.dependencies[name])
     }
     if (pkg === root) return
