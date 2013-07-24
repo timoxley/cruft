@@ -198,8 +198,8 @@ function getFilesIn(dir, fn) {
 function execCmd(cmd, dir, fn) {
   var execCmd = cmd.split(' ')[0]
   var args = cmd.split(' ').slice(1)
-  var output = undefined
-  var err = undefined
+  var output = ''
+  var err = ''
 
   if (typeof dir === 'function') {
     fn = dir
