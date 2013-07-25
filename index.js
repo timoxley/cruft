@@ -212,10 +212,10 @@ function execCmd(cmd, dir, fn) {
   child.stdout.setEncoding('utf8')
   child.stderr.setEncoding('utf8')
   child.stdout.pipe(concat(function(data) {
-    output = data
+    output = data || ''
   }))
   child.stderr.pipe(concat(function(data) {
-    err = data
+    err = data || ''
   }))
   child.on('close', function(code) {
     if (code !== 0) return fn(new Error(err))
