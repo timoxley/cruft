@@ -2,6 +2,8 @@
 
 Package cruft removal.
 
+[![Build Status](https://travis-ci.org/timoxley/cruft.png?branch=master)](https://travis-ci.org/timoxley/cruft)
+
 Cruft tries to remove files from codebases that are not required in production (e.g. docs, tests, examples). 
 
 Primary use case is deploying on [devices](http://ninjablocks.com) that may not have a lot of disk space
@@ -32,6 +34,8 @@ or access to decent bandwidth (e.g. [Australia](http://www.netindex.com/download
   cruft 50.65mb of cruft cleared! +3ms
   cruft 61.68% reduction! +10ms
 ```
+
+You'll be surprised how much cruft there is in your codebase. Try it and see!
 
 ## Default Cruft
 
