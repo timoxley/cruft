@@ -53,7 +53,7 @@ By default, the following content will be removed. This is potentially dangerous
 - doc
 - man
 
-# Cruft
+# Cruft Found
 
 This is a list of npm packages and their cruft
 if a package is found in this list when cruft is run,
