@@ -2,6 +2,8 @@
 
 Package cruft removal.
 
+<img src="https://f.cloud.github.com/assets/43438/1368434/161fab1a-39a0-11e3-9d4a-9dffc2746cf6.png" align="right">
+
 [![Build Status](https://travis-ci.org/timoxley/cruft.png?branch=master)](https://travis-ci.org/timoxley/cruft)
 
 Cruft tries to remove files from codebases that are not required in production such as documentation, tests, examples). 
