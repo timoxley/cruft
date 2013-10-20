@@ -1,12 +1,12 @@
 # cruft
 
-Package cruft removal.
-
 <img src="https://f.cloud.github.com/assets/43438/1368434/161fab1a-39a0-11e3-9d4a-9dffc2746cf6.png" align="right">
+
+Package cruft removal.
 
 [![Build Status](https://travis-ci.org/timoxley/cruft.png?branch=master)](https://travis-ci.org/timoxley/cruft)
 
-Cruft tries to remove files from codebases that are not required in production such as documentation, tests, examples). 
+`cruft` tries to remove files from codebases that are not required in production such as documentation, tests, examples). 
 
 The primary usecase is for deploying to devices with constrained diskspace (e.g. [NinjaBlocks](http://ninjablocks.com))
 or bandwidth (e.g. [Australia](http://www.netindex.com/download/2,18/Australia/)).
@@ -57,8 +57,8 @@ By default, the following content will be removed. This is potentially dangerous
 
 # Cruft Found
 
-This is a list of npm packages and their cruft
-if a package is found in this list when cruft is run,
+This is a list of npm packages and their cruft.
+If a package is found in this list when `cruft` is run,
 any listed content will be removed. 
 
 Entries starting with a bang will not be removed. e.g.
