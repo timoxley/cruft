@@ -37,10 +37,14 @@ or access to decent bandwidth (e.g. [Australia](http://www.netindex.com/download
 
 You'll be surprised how much cruft there is in your codebase. Try it and see!
 
+## Identifying Cruft
+
+`cruft` uses [visionmedia/mdconf](https://github.com/visionmedia/mdconf) to get a list of patterns to match, extracted straight from this readme.
+If you find a package that has additional cruft, or mistakenly identified cruft, submit a pull request to update this readme!
+
 ## Default Cruft
 
 By default, the following content will be removed. This is potentially dangerous.
-
 
 - example
 - examples
@@ -49,9 +53,7 @@ By default, the following content will be removed. This is potentially dangerous
 - doc
 - man
 
-Updates to this readme will change these defaults.
-
-# Cruft Found
+# Cruft
 
 This is a list of npm packages and their cruft
 if a package is found in this list when cruft is run,
@@ -60,8 +62,6 @@ any listed content will be removed.
 Entries starting with a bang will not be removed. e.g.
 override defaults in the case they remove something they
 should not.
-
-Updates to this readme will change these values.
 
 ## hawk
   - images
