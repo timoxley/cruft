@@ -10,7 +10,11 @@ test('it removes cruft', function(t) {
     if (err) return console.error('error', err)
     fs.copy(__dirname + '/fixtures/simple', __dirname + '/tmp', function(err) {
       if (err) return console.error('error', err)
-      Cruft(__dirname + '/tmp', __dirname + '/../Readme.md', function(err, stats) {
+      Cruft({
+        dir: __dirname + '/tmp',
+        cruftFile: __dirname + '/../Readme.md',
+        force: true
+      } , function(err, stats) {
         t.ifError(err, 'no error')
         t.assert(stats.after < stats.before, 'reduces total size, before: '+stats.before+' after: ' + stats.after)
         t.assert(stats.files.length, 'lists files')

@@ -25,57 +25,70 @@ var merge = require('util')._extend
 
 var NPM_PATH = __dirname + '/node_modules/.bin/npm'
 
-module.exports = function(dir, cruftFile, fn) {
-  // cruftFile is optional
-  if (typeof cruftFile === 'function') {
-    fn = cruftFile
-    cruftFile = null
-  }
+module.exports = function(options, fn) {
+  options = options || {}
+  var cruftFile = options.cruftFile
+  var dir = options.dir
+  var dry = !!options.dry // default false
+
   module.exports.load(cruftFile, function(err, cruft) {
     if (err) return fn(err)
     log('loaded cruft file')
-    module.exports.clear(dir, cruft, fn)
+    module.exports.clear({
+      dir: dir,
+      filter: cruft,
+      dry: dry
+    }, fn)
   })
 }
 
-module.exports.clear = function(dir, filter, fn) {
+module.exports.clear = function(options, fn) {
+  options = options || {}
+  var dir = options.dir
+  var filter = options.filter
+  var dry = !!options.dry || false
   var beforeSize = 0
-  du(dir, function(err, size) {
-    if (err) return fn(err)
-    log('calculated size before', size)
-    beforeSize = size
-    prune(dir, function(err) {
-      if (err) return fn(err)
-      dedupe(dir, function(err) {
-      if (err) return fn(err)
-        findPackages(dir, function(err, installed) {
-        if (err) return fn(err)
-          log('found %d packages', installed.length)
-          findCruft(installed, filter, function(err, files) {
-            if (err) return fn(err)
-            log('found %d pieces of cruft', files.length)
-            async.mapLimit(files, 128, function(file, done) {
-              log('removing %s.', file)
-              remove(file, function(err) {
-                if (err) return done(err)
-                  done(null, file)
-              })
-            }, function(err, files) {
-              if (err) return fn(err)
-              du(dir, function(err, size) {
-                if (err) return fn(err)
-                  log('calculated size after', size)
-                fn(null, {
-                  before: beforeSize,
-                  after: size,
-                  files: files
-                })
+  async.series([
+    function(next) {
+      calculateSize(dir, function(err, size) {
+        beforeSize = size
+        next(err, size)
+      })
+    },
+    prune.bind(null, dir),
+    dedupe.bind(null, dir),
+    function(done) {
+      findPackages(dir, function(err, installed) {
+        if (err) return done(err)
+        log('found %d packages', installed.length)
+        findCruft(installed, filter, function(err, files) {
+          if (err) return done(err)
+          log('found %d pieces of cruft', files.length)
+          if (dry) {
+            log('doing a dry run. use --force to actually remove cruft')
+            return done(err, {
+              before: beforeSize,
+              after: beforeSize,
+              files: files
+            })
+          }
+          log('removing cruft')
+          removeCruft(files, function(err) {
+            log('removed cruft')
+            if (err) return done(err)
+            calculateSize(dir, function(err, afterSize) {
+              done(err, {
+                before: beforeSize,
+                after: afterSize,
+                files: files
               })
             })
           })
         })
       })
-    })
+    }
+  ], function(err, args) {
+    fn(err, args[args.length - 1])
   })
 }
 
@@ -92,6 +105,14 @@ module.exports.load = function(file, fn) {
     info['cruft found'].__defaults = info.cruft['default cruft'] || []
     fn(null, info['cruft found'])
   })
+}
+
+function calculateSize(dir, fn) {
+  du(dir, fn)
+}
+
+function removeCruft(files, fn) {
+  async.mapLimit(files, 128, remove, fn)
 }
 
 function findCruft(packages, filter, fn) {

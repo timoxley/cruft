@@ -7,6 +7,7 @@ var bytes = require('bytes')
 program
 .version(require(__dirname + '/../package.json').version)
 .option('-f, --file [file]', 'markdown file containing cruft definitions', __dirname + '/../Readme.md')
+.option('--force', 'actually remove cruft. without this flag we do a dry run.')
 .option('-v, --verbose', 'verbose output')
 .parse(process.argv)
 
@@ -22,7 +23,11 @@ var Cruft = require('../index')
 var debug = require('debug')
 var info = debug('cruft')
 
-Cruft(program.args[0] || process.cwd(), program.file, function(err, stat) {
+Cruft({
+  dir: program.args[0] || process.cwd(),
+  cruftFile: program.file,
+  dry: !program.force
+}, function(err, stat) {
   if (err) error(err)
   info('before', bytes(stat.before))
   info('after', bytes(stat.after))
