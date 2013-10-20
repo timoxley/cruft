@@ -4,10 +4,10 @@ Package cruft removal.
 
 [![Build Status](https://travis-ci.org/timoxley/cruft.png?branch=master)](https://travis-ci.org/timoxley/cruft)
 
-Cruft tries to remove files from codebases that are not required in production (e.g. docs, tests, examples). 
+Cruft tries to remove files from codebases that are not required in production such as documentation, tests, examples). 
 
-Primary use case is deploying on [devices](http://ninjablocks.com) that may not have a lot of disk space
-or access to decent bandwidth (e.g. [Australia](http://www.netindex.com/download/2,18/Australia/)).
+The primary usecase is for deploying to devices with constrained diskspace (e.g. [NinjaBlocks](http://ninjablocks.com))
+or bandwidth (e.g. [Australia](http://www.netindex.com/download/2,18/Australia/)).
 
 ## Usage
 
