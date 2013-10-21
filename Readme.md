@@ -6,7 +6,8 @@ Package cruft removal.
 
 [![Build Status](https://travis-ci.org/timoxley/cruft.png?branch=master)](https://travis-ci.org/timoxley/cruft)
 
-`cruft` tries to remove files from codebases that are not required in production such as documentation, tests and examples. 
+`cruft` tries to remove files from codebases that are not required in production such as documentation, tests and examples.
+This is potentially very dangerous, use with a high level of caution.
 
 The primary usecase is for deploying to devices with constrained diskspace (e.g. [NinjaBlocks](http://ninjablocks.com))
 or bandwidth (e.g. [Australia](http://www.netindex.com/download/2,18/Australia/)).
@@ -69,7 +70,7 @@ If you find a package that has additional cruft, or mistakenly identified cruft,
 
 ## Default Cruft
 
-By default, the following content will be removed. This is potentially dangerous.
+By default, the following content will be removed.
 
 - example
 - examples
