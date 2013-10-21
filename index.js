@@ -27,19 +27,15 @@ var NPM_PATH = __dirname + '/node_modules/.bin/npm'
 
 module.exports = function(options, fn) {
   options = options || {}
-  var cruftFile = options.cruftFile
+  var cruft = options.cruft
   var dir = options.dir
   var dry = !!options.dry // default false
 
-  module.exports.load(cruftFile, function(err, cruft) {
-    if (err) return fn(err)
-    log('loaded cruft file')
-    module.exports.clear({
-      dir: dir,
-      filter: cruft,
-      dry: dry
-    }, fn)
-  })
+  module.exports.clear({
+    dir: dir,
+    filter: cruft,
+    dry: dry
+  }, fn)
 }
 
 module.exports.clear = function(options, fn) {
@@ -55,8 +51,14 @@ module.exports.clear = function(options, fn) {
         next(err, size)
       })
     },
-    prune.bind(null, dir),
-    dedupe.bind(null, dir),
+    function(next) {
+      if (dry) return next()
+      prune(dir, next)
+    },
+    function(next) {
+      if (dry) return next()
+      dedupe(dir, next)
+    },
     function(done) {
       findPackages(dir, function(err, installed) {
         if (err) return done(err)
@@ -65,12 +67,14 @@ module.exports.clear = function(options, fn) {
           if (err) return done(err)
           log('found %d pieces of cruft', files.length)
           if (dry) {
-            log('doing a dry run. use --force to actually remove cruft')
-            return done(err, {
-              before: beforeSize,
-              after: beforeSize,
-              files: files
+            return estimateSizes(files, function(err, estimatedSize) {
+              done(err, {
+                before: beforeSize,
+                after: beforeSize - estimatedSize,
+                files: files
+              })
             })
+            return
           }
           log('removing cruft')
           removeCruft(files, function(err) {
@@ -109,6 +113,15 @@ module.exports.load = function(file, fn) {
 
 function calculateSize(dir, fn) {
   du(dir, fn)
+}
+
+function estimateSizes(files, fn) {
+  async.reduce(files, 0, function(prev, file, next) {
+    du(file, function(err, size) {
+      if (err) return next(err)
+      next(null, prev + size)
+    })
+  }, fn)
 }
 
 function removeCruft(files, fn) {

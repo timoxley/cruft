@@ -5,19 +5,22 @@ var Cruft = require('../index')
 var test = require('tape')
 
 test.only('it prunes packages', function(t) {
-  t.plan(2)
+  t.plan(3)
   fs.remove(__dirname + '/tmp/', function(err) {
     if (err) return console.error('error', err)
     fs.copy(__dirname + '/fixtures/simple', __dirname + '/tmp', function(err) {
       if (err) return console.error('error', err)
       fs.copy(__dirname + '/fixtures/prune/', __dirname + '/tmp/node_modules/prune/', function(err) {
-        Cruft({
-          dir: __dirname + '/tmp',
-          cruftFile: __dirname + '/../Readme.md',
-          force: true
-        }, function(err, stats) {
+        Cruft.load(__dirname + '/../Readme.md', function(err, cruft) {
           t.ifError(err, 'no error')
-          t.assert(!fs.existsSync(__dirname + '/tmp/node_modules/prune'), 'removes prune package')
+          Cruft({
+            dir: __dirname + '/tmp',
+            cruft: cruft,
+            force: true
+          }, function(err, stats) {
+            t.ifError(err, 'no error')
+            t.assert(!fs.existsSync(__dirname + '/tmp/node_modules/prune'), 'removes prune package')
+          })
         })
       })
     })

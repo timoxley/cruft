@@ -39,10 +39,33 @@ or bandwidth (e.g. [Australia](http://www.netindex.com/download/2,18/Australia/)
 
 You'll be surprised how much cruft there is in your codebase. Try it and see!
 
+## Specifying Cruft
+
+`cruft` uses [dominictarr/rc](https://github.com/dominictarr/rc) for its configuration, so you can specify cruft in various ways,
+including a config.json file specified by `--config`. See [dominictarr/rc](https://github.com/dominictarr/rc) for other ways to specify configuration. `cruft`'s app-name is 'cruft'.
+
+```
+> cat config.json # __defaults apply to every module
+"cruft": {
+  "__defaults": ["test", "examples"],
+  "some-module": ["images"]
+}
+> cruft clear --config config.json
+```
+
+By default, this will add to the default cruft listed below. To turn off
+the default cruft, use `--noDefaultCruft`:
+
+```
+# use cruft_cruft environment variable to specify a custom cruft pattern
+# and --noDefaultCruft to disable default cruft patterns
+> cruft_cruft="tests" cruft clear --noDefaultCruft
+```
+
 ## Identifying Cruft
 
-`cruft` uses [visionmedia/mdconf](https://github.com/visionmedia/mdconf) to get a list of patterns to match, extracted straight from this readme.
-If you find a package that has additional cruft, or mistakenly identified cruft, submit a pull request to update this readme!
+`cruft` uses [visionmedia/mdconf](https://github.com/visionmedia/mdconf) to get a list of default patterns to match straight from this readme.
+If you find a package that has additional cruft, or mistakenly identified cruft, submit a pull request to update the list in this readme.
 
 ## Default Cruft
 

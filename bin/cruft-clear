@@ -6,34 +6,78 @@ var bytes = require('bytes')
 
 program
 .version(require(__dirname + '/../package.json').version)
-.option('-f, --file [file]', 'markdown file containing cruft definitions', __dirname + '/../Readme.md')
+.option('-d, --noDefaultCruft', 'Include default cruft definitions from Readme.md', Boolean)
+.option('--config [path]', 'path to json cruft configuration')
 .option('--force', 'actually remove cruft. without this flag we do a dry run.')
+.option('-l, --list', 'list files removed')
+.option('-c, --cruft', 'list of additional cruft patterns to remove')
 .option('-v, --verbose', 'verbose output')
 .parse(process.argv)
 
+var config = require('rc')('cruft', {
+  noDefaultCruft: false,
+  verbose: false,
+  force: false,
+  list: false,
+  cruft: {}
+}, program)
+
+var merge = require('util')._extend
+
 if (!process.env.DEBUG) {
   process.env.DEBUG = 'cruft'
-  if (program.verbose) process.env.DEBUG = 'cruft *'
+  if (config.verbose) process.env.DEBUG = 'cruft *'
 }
 
 // wait for debug arg handling before loading 
 // rest of app
 
-var Cruft = require('../index')
+var cruft = require('../index')
 var debug = require('debug')
 var info = debug('cruft')
 
-Cruft({
-  dir: program.args[0] || process.cwd(),
-  cruftFile: program.file,
-  dry: !program.force
-}, function(err, stat) {
-  if (err) error(err)
-  info('before', bytes(stat.before))
-  info('after', bytes(stat.after))
-  info(bytes(stat.before - stat.after) + ' of cruft cleared!')
-  info(percentageDifference(stat.before, stat.after) + '% reduction!')
-})
+// shitty casting bools from configs, ugh
+config.noDefaultCruft = castBool(config.noDefaultCruft)
+config.force = castBool(config.force)
+config.list = castBool(config.list)
+config.verbose = castBool(config.verbose)
+
+function castBool(val) {
+  if (val === 'true') return true
+  if (val === true) return true
+  return false
+}
+
+
+if (typeof config.cruft == 'string') config.cruft = {__defaults: config.cruft}
+
+if (!config.noDefaultCruft) {
+  cruft.load(__dirname + '/../Readme.md', function(err, cruft) {
+    if (err) throw err
+    config.cruft = merge(config.cruft, cruft)
+    run()
+  })
+} else {
+  run()
+}
+
+function run() {
+  console.log(config)
+  if (!config.force) info('doing a dry run. use --force to actually remove cruft')
+  if (!config.force) info('estimating..')
+  cruft({
+    dir: config.args[0] || process.cwd(),
+    cruft: config.cruft,
+    dry: !config.force
+  }, function(err, stat) {
+    if (err) error(err)
+    if (config.list) info('\n', stat.files.join('\n'))
+    info('before', bytes(stat.before))
+    info('after', bytes(stat.after))
+    info(bytes(stat.before - stat.after) + ' of cruft!')
+    info(percentageDifference(stat.before, stat.after) + '% reduction!')
+  })
+}
 
 /**
  * Helpers
