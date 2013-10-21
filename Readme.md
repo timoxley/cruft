@@ -97,3 +97,7 @@ should not.
 
 ## ansi
   - !examples
+
+# License
+
+MIT
