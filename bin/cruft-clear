@@ -62,7 +62,6 @@ if (!config.noDefaultCruft) {
 }
 
 function run() {
-  console.log(config)
   if (!config.force) info('doing a dry run. use --force to actually remove cruft')
   if (!config.force) info('estimating..')
   cruft({
