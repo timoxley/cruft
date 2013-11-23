@@ -4,7 +4,7 @@ var fs = require('fs-extra')
 var Cruft = require('../index')
 var test = require('tape')
 
-test.only('it prunes packages', function(t) {
+test('it prunes packages', function(t) {
   t.plan(3)
   fs.remove(__dirname + '/tmp/', function(err) {
     if (err) return console.error('error', err)
