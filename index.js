@@ -13,8 +13,7 @@ var parse = require('mdconf');
 var minimatch = require("minimatch")
 
 var async = require('async')
-var concat = require('concat-stream')
-var split = require('split')
+var bl = require('bl')
 
 var debug = require('debug')
 var info = debug('cruft')
@@ -219,19 +218,21 @@ function removeDuplicates(packages) {
 }
 
 function getFilesIn(dir, fn) {
+  var files = bl(function() {})
+  var errs = bl(function() {})
   var find = spawn('find', [dir])
   find.stdout.setEncoding('utf8')
-  find.stdout.pipe(concat(function(files) {
-    files = files || ''
-    fn(null, files.split('\n'))
-  }))
+  find.stdout.pipe(files)
+  find.stdout.pipe(errs)
+  find.on('close', function(code) {
+    if (code !== 0) return fn(new Error('non-zero exit for find: \n'  + errs.toString()))
+    fn(null, files.toString().split('\n'))
+  })
 }
 
 function execCmd(cmd, dir, fn) {
   var execCmd = cmd.split(' ')[0]
   var args = cmd.split(' ').slice(1)
-  var output = ''
-  var err = ''
 
   if (typeof dir === 'function') {
     fn = dir
@@ -241,17 +242,17 @@ function execCmd(cmd, dir, fn) {
     cwd: dir,
     stdio: 'pipe'
   })
+
+  var output = bl(function(){})
+  var errs = bl(function(){})
+
   child.stdout.setEncoding('utf8')
   child.stderr.setEncoding('utf8')
-  child.stdout.pipe(concat(function(data) {
-    output = data || ''
-  }))
-  child.stderr.pipe(concat(function(data) {
-    err = data || ''
-  }))
+  child.stdout.pipe(output)
+  child.stderr.pipe(errs)
   child.on('close', function(code) {
-    if (code !== 0) return fn(new Error(err))
-    silly('executed: %s: \nstdout: %s\n stderr: %s\n', cmd, output.slice(0, 1000), err)
-    fn(null, output, err)
+    if (code !== 0) return fn(new Error(errs.toString()))
+    silly('executed: %s: \nstdout: %s\n stderr: %s\n', cmd, output.toString().slice(0, 50), errs.toString())
+    fn(null, output.toString(), errs.toString())
   })
 }
