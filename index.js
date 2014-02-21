@@ -13,7 +13,6 @@ var parse = require('mdconf');
 var minimatch = require("minimatch")
 
 var async = require('async')
-var through = require('through')
 var concat = require('concat-stream')
 var split = require('split')
 
