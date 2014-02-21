@@ -21,19 +21,19 @@
   "license": "MIT",
   "dependencies": {
     "mdconf": "0.0.2",
-    "commander": "~2.1.0",
-    "minimatch": "~0.2.12",
-    "async": "~0.2.9",
-    "debug": "~0.7.4",
-    "bytes": "~0.2.1",
+    "commander": "^2.1.0",
+    "minimatch": "^0.2.14",
+    "async": "^0.2.10",
+    "debug": "^0.7.4",
+    "bytes": "^0.2.1",
     "npm": "^1.4.4",
     "du": "0.0.2",
-    "rc": "~0.3.1",
+    "rc": "^0.3.4",
     "bl": "^0.7.0"
   },
   "devDependencies": {
     "fs-extra": "~0.8.1",
-    "tape": "~1.0.4"
+    "tape": "^2.4.2"
   },
   "gitHead": "d1f729ad2d8aa92f9b13c7444803394ca46167e9",
   "readmeFilename": "Readme.md",
