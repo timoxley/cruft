@@ -140,20 +140,16 @@ function findCruft(packages, filter, fn) {
       }
     })
     log('cruft to remove from %s', name, patterns.join(', '))
-    getFilesIn(pkg.realPath).pipe(split()).pipe(through(function(file) {
-      if (!file) return
-      var doesMatch = patterns.some(function(pattern) {
-        return minimatch(path.relative(pkg.realPath, file), pattern)
-      })
-      if (doesMatch) {
-        this.push([file])
-      }
-    })).pipe(concat(function(files) {
+    getFilesIn(pkg.realPath, function(err, files) {
+      if (err) return done(err)
       files = files || []
       done(null, files.filter(function(file) {
-        return file
+        if (!file) return
+        return patterns.some(function(pattern) {
+          return minimatch(path.relative(pkg.realPath, file), pattern)
+        })
       }))
-    }))
+    })
   }, function(err, files) {
     files = files.filter(function(file) {
       return file
@@ -226,7 +222,10 @@ function removeDuplicates(packages) {
 function getFilesIn(dir, fn) {
   var find = spawn('find', [dir])
   find.stdout.setEncoding('utf8')
-  return find.stdout
+  find.stdout.pipe(concat(function(files) {
+    files = files || ''
+    fn(null, files.split('\n'))
+  }))
 }
 
 function execCmd(cmd, dir, fn) {
