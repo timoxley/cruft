@@ -20,17 +20,17 @@
   "author": "Tim Oxley",
   "license": "MIT",
   "dependencies": {
-    "mdconf": "0.0.2",
+    "async": "^0.8.0",
+    "bl": "^0.8.0",
+    "bytes": "^0.3.0",
     "commander": "^2.1.0",
+    "debug": "^0.8.1",
+    "du": "^0.1.0",
+    "fs-extra": "^0.8.1",
+    "mdconf": "0.0.2",
     "minimatch": "^0.2.14",
-    "async": "^0.2.10",
-    "debug": "^0.7.4",
-    "bytes": "^0.2.1",
     "npm": "^1.4.4",
-    "du": "0.0.2",
-    "rc": "^0.3.4",
-    "bl": "^0.7.0",
-    "fs-extra": "^0.8.1"
+    "rc": "^0.3.4"
   },
   "devDependencies": {
     "fs-extra": "~0.8.1",
